@@ -1,8 +1,9 @@
 'use strict';
 var app = angular.module('todoapp', []);
 
-app.controller("TodoCtrl", function ($scope, filterFilter){
-    
+app.controller("TodoCtrl", function ($scope, filterFilter, $location){
+    $scope.placeholder = 'New Task';
+    $scope.statusFilter = {};
     
     $scope.todos = [
         {
@@ -14,6 +15,7 @@ app.controller("TodoCtrl", function ($scope, filterFilter){
             completed: false
         }
     ];
+    
     $scope.$watch('todos', function (){
         $scope.remaining = filterFilter($scope.todos, {completed: false}).length;
         $scope.allchecked = !$scope.remaining;
@@ -38,5 +40,15 @@ app.controller("TodoCtrl", function ($scope, filterFilter){
     
     $scope.editTodo = function (todo){
         todo.editing = false;
-    }
+    };
+    
+    if($location.path() == ''){ $location.path('/'); }
+    $scope.location = $location;
+    $scope.$watch('location.path()', function (path){
+        $scope.statusFilter = 
+                (path == '/done') ? { completed: true } :
+                (path == '/notdone') ? { completed: false } : 
+                {} ;
+    });
+    
 });
