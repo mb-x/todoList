@@ -11,36 +11,39 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="../node_modules/todomvc-app-css/index.css" />
     </head>
-    <body>
-        <section class="todoapp">
+    <body ng-app="todoapp">
+        <section class="todoapp" ng-controller='TodoCtrl'>
             <header class="header">
                 <h1>Todo List</h1>
-                <form action="#" id="todo-form">
-                    <input type="text" class="new-todo" placeholder="new task" autofocus autocomplete="off"/>
+                <form action="#" id="todo-form" ng-submit="addTodo()">
+                    <input type="text" ng-model="newtodo" class="new-todo" placeholder="{{ placehoder }}" autofocus autocomplete="off"/>
                 </form>
             </header>
             <section class="main">
+                <input type="checkbox" class="toggle-all" ng-model="allchecked" ng-click="checkAllTodo(allchecked)" />
                 <ul class="todo-list">
-                    <li>
+                    <li ng-repeat="todo in todos |orderBy:'completed'" ng-class="{completed: todo.completed , editing: todo.editing}"
+                        ng-dblclick="todo.editing = true">
                         <div class="view">
-                            <input type="checkbox" class="toggle" />
-                            <label>Etendre la ligne</label>
-                            <button class="destroy" ></button>
+                            <input type="checkbox" class="toggle" ng-model="todo.completed" />
+                            <label>{{ todo.name }}</label>
+                            <button class="destroy" ng-click="removeTodo($index)"></button>
                         </div>
                         <form action="#">
-                            <input class="edit" value="Etendre la ligne" />
+                            <input class="edit" ng-model="todo.name" ng-blur="editTodo(todo)" />
                         </form>
                     </li>
                 </ul>
             </section>
             <footer class="footer">
                 <span class="todo-count">
-                    <strong>3</strong>
+                    <strong>{{remaining}} remaining tasks</strong>
                 </span>
             </footer>
         </section>
         
         
         <script src="bower_components/angular/angular.min.js"></script>
+        <script src="app.js"></script>
     </body>
 </html>
